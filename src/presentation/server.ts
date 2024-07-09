@@ -7,14 +7,13 @@ interface Options {
 }
 
 export class Server {
-	public readonly app: FastifyInstance
+	public readonly app: FastifyInstance = Fastify()
 	private readonly port: number
 	private readonly routes: (fastify: FastifyInstance) => void
 
 	constructor(options: Options) {
 		const { port = 3100, routes } = options
 
-		this.app = Fastify()
 		this.port = port
 		this.routes = routes
 	}

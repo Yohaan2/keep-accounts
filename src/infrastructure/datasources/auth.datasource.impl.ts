@@ -1,11 +1,56 @@
-import { AuthDatasource, CustomError, RegisterUserDto, UserEntity } from '../../domain'
+import { BcryptAdapter } from '../../config'
+import { User } from '../../data/mongodb'
+import {
+	AuthDatasource,
+	CustomError,
+	RegisterUserDto,
+	UserEntity,
+	LoginUserDto,
+} from '../../domain'
+import { UserMapper } from '../index'
+
+type HashFunction = (password: string) => string
+type CompareFunction = (password: string, hash: string) => boolean
 
 export class AuthDatasourceImpl implements AuthDatasource {
+	constructor(
+		private readonly hashPassword: HashFunction = BcryptAdapter.hash,
+		private readonly comparePassword: CompareFunction = BcryptAdapter.compare
+	) {}
+
 	async register(registerUserDto: RegisterUserDto): Promise<UserEntity> {
 		const { name, email, password } = registerUserDto
 
 		try {
-			return new UserEntity('1', name, email, password, ['ADMIN'])
+			const emailExists = await User.findOne({ email })
+			if (emailExists) throw CustomError.BadRequest('Credentials invalid')
+
+			const user = await User.create({
+				name,
+				email,
+				password: this.hashPassword(password),
+			})
+
+			await user.save()
+
+			return UserMapper.userEntityFromObject(user)
+		} catch (error) {
+			if (error instanceof CustomError) {
+				throw error
+			}
+			throw CustomError.InternalServer()
+		}
+	}
+
+	async login(loginUserDto: LoginUserDto): Promise<UserEntity> {
+		const { email, password } = loginUserDto
+		try {
+			const user = await User.findOne({ email })
+			if (!user) throw CustomError.BadRequest('Invalid email or password')
+			const isValidPassword = this.comparePassword(password, user.password)
+			if (!isValidPassword) throw CustomError.BadRequest('Invalid email or password')
+
+			return UserMapper.userEntityFromObject(user)
 		} catch (error) {
 			if (error instanceof CustomError) {
 				throw error
