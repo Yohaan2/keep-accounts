@@ -1,4 +1,4 @@
-import Fastify, { FastifyInstance, FastifyPluginAsync } from 'fastify'
+import { FastifyInstance } from 'fastify'
 import { AuthRoutes } from './auth/routes'
 
 export class AppRoutes {

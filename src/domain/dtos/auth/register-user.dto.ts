@@ -7,8 +7,8 @@ export class RegisterUserDto {
 		public password: string
 	) {}
 
-	static create(object: { [key: string]: any }): [string?, RegisterUserDto?] {
-		const { name, email, password } = object
+	static create(payload: { [key: string]: any }): [string?, RegisterUserDto?] {
+		const { name, email, password } = payload
 		if (!name) return ['Missing name']
 		if (!email) return ['Missing email']
 		if (!Validators.email.test(email)) return ['Invalid email']
