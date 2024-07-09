@@ -2,8 +2,8 @@ import { envs } from './config'
 import { MongoDatabase } from './data/mongodb'
 import { AppRoutes } from './presentation/routes'
 import { Server } from './presentation/server'
-;(() => {
-	main()
+;(async () => {
+	await main()
 })()
 
 async function main() {
@@ -16,5 +16,5 @@ async function main() {
 		port: envs.PORT,
 		routes: AppRoutes.routes,
 	})
-	server.start()
+	await server.start()
 }

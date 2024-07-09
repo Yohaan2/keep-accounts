@@ -7,19 +7,20 @@ import {
 	LoginUserDto,
 	LoginUser,
 } from '../../domain'
-import { JwtAdapter } from '../../config'
 import { User } from '../../data/mongodb'
 
 export class AuthController {
 	constructor(private readonly authRepository: AuthRepository) {}
 
-	private handleError(error: unknown, reply: FastifyReply) {
+	private handleError = (error: unknown, reply: FastifyReply) => {
 		if (error instanceof CustomError) {
 			reply.statusCode = error.statusCode
 			return reply.send({ error: error.message })
 		}
+
+		console.log(error)
 		reply.statusCode = 500
-		return reply.send({ error: 'Internal server error' })
+		return reply.send({ error: 'Internal Server Error' })
 	}
 
 	async register(
@@ -33,17 +34,12 @@ export class AuthController {
 		}
 
 		try {
-			const user = await new RegisterUser(
-				this.authRepository,
-				JwtAdapter.generateToken
-			).execute(registerUserDto!)
+			const user = await new RegisterUser(this.authRepository).execute(registerUserDto!)
 
 			reply.statusCode = 201
 			return reply.send(user)
 		} catch (error) {
-			console.log(error)
-			reply.statusCode = 500
-			return reply.send({ error: 'Internal server error por aqui' })
+			return this.handleError(error, reply)
 		}
 	}
 
@@ -53,21 +49,28 @@ export class AuthController {
 			reply.statusCode = 400
 			return reply.send({ error })
 		}
-		new LoginUser(this.authRepository)
-			.execute(loginUserDto!)
-			.then((user) => reply.send(user))
-			.catch((error) => {
-				console.log(error)
-				return reply.status(500).send({ error })
-			})
+
+		try {
+			const user = await new LoginUser(this.authRepository).execute(loginUserDto!)
+
+			reply.statusCode = 201
+			return reply.send(user)
+		} catch (error) {
+			return this.handleError(error, reply)
+		}
 	}
 
-	async getUser(
+	getUsers(
 		request: FastifyRequest<{ Body: { [key: string]: any } }>,
 		reply: FastifyReply
 	) {
-		const users = await User.find()
-		reply.statusCode = 200
-		return reply.send({ user: request.body.user })
+		User.find()
+			.then((users) => {
+				reply.send({
+					// users,
+					user: request.body.user,
+				})
+			})
+			.catch(() => reply.status(500).send({ error: 'Internal server error' }))
 	}
 }

@@ -1,15 +1,17 @@
-import Fastify, { FastifyInstance } from 'fastify'
-import formbody from '@fastify/formbody'
+import fastifyFormbody from '@fastify/formbody'
+import fastify, { FastifyInstance } from 'fastify'
 
 interface Options {
 	port?: number
-	routes: (fastify: FastifyInstance) => void
+	routes: FastifyInstanceFunction
 }
 
+type FastifyInstanceFunction = (fastify: FastifyInstance) => void
+
 export class Server {
-	public readonly app: FastifyInstance = Fastify()
+	public readonly app: FastifyInstance = fastify()
 	private readonly port: number
-	private readonly routes: (fastify: FastifyInstance) => void
+	private readonly routes: FastifyInstanceFunction
 
 	constructor(options: Options) {
 		const { port = 3100, routes } = options
@@ -19,7 +21,7 @@ export class Server {
 	}
 
 	async start() {
-		this.app.register(formbody) // x-www-form-urlencoded
+		this.app.register(fastifyFormbody) // x-www-form-urlencoded
 		this.routes(this.app)
 
 		this.app.listen({ port: this.port }, (err, address) => {

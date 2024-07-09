@@ -1,5 +1,5 @@
-import { FastifyInstance } from 'fastify'
 import { AuthRoutes } from './auth/routes'
+import { FastifyInstance } from 'fastify'
 
 export class AppRoutes {
 	static get routes() {
