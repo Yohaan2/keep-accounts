@@ -1,5 +1,10 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
-import { ClientCreateDto, ClientRepository, CustomError } from '../../domain'
+import {
+	ClientAmountDto,
+	ClientCreateDto,
+	ClientRepository,
+	CustomError,
+} from '../../domain'
 
 export class ClientController {
 	constructor(private readonly clientRepository: ClientRepository) {}
@@ -36,7 +41,26 @@ export class ClientController {
 		}
 	}
 
-	recordDebt = async (request: FastifyRequest, reply: FastifyReply) => {
-		return reply.send({ message: "I'm debt" })
+	recordDebt = async (
+		request: FastifyRequest<{ Body: ClientAmountDto; Params: { id: string } }>,
+		reply: FastifyReply
+	) => {
+		const [error, clientAmountDto] = ClientAmountDto.create(request.body)
+		if (error) {
+			reply.statusCode = 400
+			return reply.send({ error })
+		}
+
+		try {
+			const client = await this.clientRepository.recordDebt(
+				clientAmountDto!,
+				request.params.id
+			)
+
+			reply.statusCode = 201
+			return reply.send(client)
+		} catch (error) {
+			return this.handleError(error, reply)
+		}
 	}
 }

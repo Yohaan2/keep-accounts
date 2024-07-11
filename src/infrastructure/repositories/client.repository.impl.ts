@@ -1,4 +1,5 @@
 import {
+	ClientAmountDto,
 	ClientCreateDto,
 	ClientDatasource,
 	ClientRepository,
@@ -10,5 +11,9 @@ export class ClientRepositoryImpl implements ClientRepository {
 
 	create(clientCreateDto: ClientCreateDto): Promise<ClientUserEntity> {
 		return this.clientDatasource.create(clientCreateDto)
+	}
+
+	recordDebt(clientAmountDto: ClientAmountDto, id: string): Promise<ClientUserEntity> {
+		return this.clientDatasource.recordDebt(clientAmountDto, id)
 	}
 }
