@@ -23,10 +23,10 @@ export class AuthController {
 		return reply.send({ error: 'Internal Server Error' })
 	}
 
-	async register(
+	register = async (
 		request: FastifyRequest<{ Body: RegisterUserDto }>,
 		reply: FastifyReply
-	) {
+	) => {
 		const [error, registerUserDto] = RegisterUserDto.create(request.body)
 		if (error) {
 			reply.statusCode = 400
@@ -43,7 +43,10 @@ export class AuthController {
 		}
 	}
 
-	async login(request: FastifyRequest<{ Body: LoginUserDto }>, reply: FastifyReply) {
+	login = async (
+		request: FastifyRequest<{ Body: LoginUserDto }>,
+		reply: FastifyReply
+	) => {
 		const [error, loginUserDto] = LoginUserDto.create(request.body)
 		if (error) {
 			reply.statusCode = 400
@@ -60,10 +63,10 @@ export class AuthController {
 		}
 	}
 
-	getUsers(
+	getUsers = (
 		request: FastifyRequest<{ Body: { [key: string]: any } }>,
 		reply: FastifyReply
-	) {
+	) => {
 		User.find()
 			.then((users) => {
 				reply.send({

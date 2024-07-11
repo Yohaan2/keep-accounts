@@ -9,6 +9,7 @@ export class AuthRoutes {
 			const datasource = new AuthDatasourceImpl()
 			const authRepository = new AuthRepositoryImpl(datasource)
 			const controller = new AuthController(authRepository)
+
 			fastify.post('/login', controller.login)
 			fastify.post('/register', controller.register)
 			fastify.get(

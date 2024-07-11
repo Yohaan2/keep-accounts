@@ -1,5 +1,5 @@
 import { RegisterUserDto, LoginUserDto } from '..'
-import { UserEntity } from '../entities/user.entity'
+import { UserEntity } from '..'
 
 export abstract class AuthRepository {
 	abstract register(registerUserDto: RegisterUserDto): Promise<UserEntity>

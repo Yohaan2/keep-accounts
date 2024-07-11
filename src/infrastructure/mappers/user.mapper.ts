@@ -10,6 +10,6 @@ export class UserMapper {
 		if (!password) throw CustomError.BadRequest('Missing password')
 		if (!roles) throw CustomError.BadRequest('Missing roles')
 
-		return new UserEntity(_id || id, name, email, password, roles)
+		return new UserEntity(_id || id, name, email, password, roles, img)
 	}
 }
