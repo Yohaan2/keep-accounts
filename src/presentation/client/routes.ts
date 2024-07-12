@@ -10,7 +10,8 @@ export class ClientRoutes {
 			const controller = new ClientController(repository)
 
 			fastify.post('/create', controller.createClient)
-			fastify.post('/:id/debt', controller.recordDebt)
+			fastify.post('/:id/record-debt', controller.recordDebt)
+			fastify.get('/:id/debts', controller.getDebts)
 		}
 	}
 }

@@ -1,4 +1,4 @@
-import { ClientAmountDto, ClientCreateDto } from '..'
+import { ClientAmountDto, ClientCreateDto, ClientDebtsEntity } from '..'
 import { ClientUserEntity } from '..'
 
 export abstract class ClientRepository {
@@ -7,4 +7,5 @@ export abstract class ClientRepository {
 		clientAmountDto: ClientAmountDto,
 		id: string
 	): Promise<ClientUserEntity>
+	abstract getDebts(id: string): Promise<ClientDebtsEntity>
 }

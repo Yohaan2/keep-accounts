@@ -6,6 +6,8 @@ export * from './dtos/client/client-amount.dto'
 // Entities
 export * from './entities/user.entity'
 export * from './entities/client-user.entity'
+export * from './entities/client-record-amount.entity'
+export * from './entities/client-debts.entity'
 // Errors
 export * from './errors/custom.error'
 // Repositories

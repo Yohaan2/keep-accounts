@@ -1,5 +1,11 @@
-import { Debt } from '../types/client.types'
+import { Types } from 'mongoose'
+import { ClientRecordAmountEntity } from '..'
 
 export class ClientUserEntity {
-	constructor(public id: string, public name: string, public debt?: Debt[]) {}
+	constructor(
+		public id: string,
+		public name: string,
+		public createdAt: Date,
+		public debt?: ClientRecordAmountEntity
+	) {}
 }
