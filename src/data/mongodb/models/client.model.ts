@@ -17,17 +17,14 @@ const clientSchema = new Schema({
 		type: String,
 		required: [true, 'Name us required'],
 	},
-	debt: [
-		{
-			type: Schema.Types.ObjectId,
-			ref: 'Debt',
-		},
-	],
+	debt: [debtSchema],
+	total: {
+		type: Number,
+		default: 0,
+	},
 	createdAt: {
 		type: Date,
 	},
 })
 
-clientSchema.plugin(require('mongoose-autopopulate'))
 export const Client = mongoose.model('Client', clientSchema)
-export const Debt = mongoose.model('Debt', debtSchema)

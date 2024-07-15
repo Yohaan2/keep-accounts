@@ -7,5 +7,4 @@ export abstract class ClientRepository {
 		clientAmountDto: ClientAmountDto,
 		id: string
 	): Promise<ClientUserEntity>
-	abstract getDebts(id: string): Promise<ClientDebtsEntity>
 }

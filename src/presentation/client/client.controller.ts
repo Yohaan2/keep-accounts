@@ -63,18 +63,4 @@ export class ClientController {
 			return this.handleError(error, reply)
 		}
 	}
-
-	getDebts = async (
-		request: FastifyRequest<{ Params: { id: string } }>,
-		reply: FastifyReply
-	) => {
-		try {
-			const client = await this.clientRepository.getDebts(request.params.id)
-
-			reply.statusCode = 200
-			return reply.send(client)
-		} catch (error) {
-			return this.handleError(error, reply)
-		}
-	}
 }

@@ -1,5 +1,5 @@
 export interface IDebt {
-	amount: number
-	description: string
-	createdAt: Date
+	amount?: number
+	description?: string
+	createdAt?: Date
 }
