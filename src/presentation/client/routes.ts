@@ -20,6 +20,7 @@ export class ClientRoutes {
 				{ preValidation: [AuthMiddleware.validateJwt] },
 				controller.recordDebt
 			)
+			fastify.get('/:id/debts', controller.getDebts)
 		}
 	}
 }

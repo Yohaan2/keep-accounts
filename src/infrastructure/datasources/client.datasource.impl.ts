@@ -3,8 +3,6 @@ import {
 	ClientAmountDto,
 	ClientCreateDto,
 	ClientDatasource,
-	ClientDebtsEntity,
-	ClientRecordAmountEntity,
 	ClientUserEntity,
 	CustomError,
 	IDebt,
@@ -43,14 +41,35 @@ export class ClientDatasourceImpl implements ClientDatasource {
 			client.total = (client.total ?? 0) + amount
 
 			client.debt.push({ amount, description, createdAt })
-			const user = await client.save()
+			const clientUpdated = await client.save()
 
 			return new ClientUserEntity(
-				user.id,
-				user.name,
-				user.createdAt as Date,
-				user.total,
-				user.debt as IDebt[]
+				clientUpdated.id,
+				clientUpdated.name,
+				clientUpdated.createdAt as Date,
+				clientUpdated.total,
+				clientUpdated.debt as IDebt[]
+			)
+		} catch (error) {
+			if (error instanceof CustomError) {
+				throw error
+			}
+			throw CustomError.InternalServer()
+		}
+	}
+
+	async getDebts(id: string): Promise<ClientUserEntity> {
+		try {
+			const client = await Client.findById(id)
+
+			if (!client) throw CustomError.NotFound('Client not found')
+
+			return new ClientUserEntity(
+				client.id,
+				client.name,
+				client.createdAt as Date,
+				client.total,
+				client.debt as IDebt[]
 			)
 		} catch (error) {
 			if (error instanceof CustomError) {
