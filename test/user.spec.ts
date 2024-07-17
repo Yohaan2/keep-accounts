@@ -2,7 +2,7 @@ import { assert } from 'chai'
 
 describe('User', () => {
 	it('should be able to create a user', () => {
-		console.log('test')
+		console.log('tests')
 		assert.isTrue(true)
 	})
 })
