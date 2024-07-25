@@ -4,6 +4,7 @@ import {
 	RegisterUserDto,
 	UserEntity,
 	LoginUserDto,
+	RefreshTokenDto,
 } from '../../domain'
 
 export class AuthRepositoryImpl implements AuthRepository {
@@ -15,5 +16,9 @@ export class AuthRepositoryImpl implements AuthRepository {
 
 	login(loginUserDto: LoginUserDto): Promise<UserEntity> {
 		return this.authDatasource.login(loginUserDto)
+	}
+
+	refreshToken(refresTokenDto: RefreshTokenDto): Promise<String> {
+		return this.authDatasource.refreshToken(refresTokenDto)
 	}
 }

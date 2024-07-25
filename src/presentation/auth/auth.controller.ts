@@ -6,11 +6,16 @@ import {
 	RegisterUserDto,
 	LoginUserDto,
 	LoginUser,
+	RefreshTokenDto,
 } from '../../domain'
 import { User } from '../../data/mongodb'
+import { LoginUserRequest, RegisterUserRequest } from './auth.types'
+import { JwtAdapter } from '../../config'
 
 export class AuthController {
-	constructor(private readonly authRepository: AuthRepository) {}
+	constructor(private readonly authRepository: AuthRepository, 
+		private readonly jwt: JwtAdapter
+	) {}
 
 	private handleError = (error: unknown, reply: FastifyReply) => {
 		if (error instanceof CustomError) {
@@ -24,7 +29,7 @@ export class AuthController {
 	}
 
 	register = async (
-		request: FastifyRequest<{ Body: RegisterUserDto }>,
+		request: FastifyRequest<RegisterUserRequest>,
 		reply: FastifyReply
 	) => {
 		const [error, registerUserDto] = RegisterUserDto.create(request.body)
@@ -34,17 +39,24 @@ export class AuthController {
 		}
 
 		try {
-			const user = await new RegisterUser(this.authRepository).execute(registerUserDto!)
+			const user = await new RegisterUser(this.authRepository, this.jwt).execute(registerUserDto!)
+
+			reply.setCookie('refresh_token', user.refreshToken, {
+				httpOnly: true,
+				secure: true,
+				path:'/',
+				maxAge: 1000 * 60 * 60 * 24 * 365
+			})
 
 			reply.statusCode = 201
-			return reply.send(user)
+			return reply.send({ user: user.user, token: user.token })
 		} catch (error) {
 			return this.handleError(error, reply)
 		}
 	}
 
 	login = async (
-		request: FastifyRequest<{ Body: LoginUserDto }>,
+		request: FastifyRequest<LoginUserRequest>,
 		reply: FastifyReply
 	) => {
 		const [error, loginUserDto] = LoginUserDto.create(request.body)
@@ -54,10 +66,38 @@ export class AuthController {
 		}
 
 		try {
-			const user = await new LoginUser(this.authRepository).execute(loginUserDto!)
+			const user = await new LoginUser(this.authRepository, this.jwt).execute(loginUserDto!)
 
+			reply.setCookie('refresh_token', user.refreshToken, {
+				httpOnly: true,
+				secure: true,
+				path:'/',
+				maxAge: 1000 * 60 * 60 * 24 * 365
+			})
 			reply.statusCode = 201
-			return reply.send(user)
+			return reply.send({ user: user.user, token:  user.token })
+		} catch (error) {
+			return this.handleError(error, reply)
+		}
+	}
+
+	logout = (_request: FastifyRequest, reply: FastifyReply) => {
+		return reply.clearCookie('refresh_token').send({ message: 'Logged out successfully' })
+	}
+
+	refreshToken = (request: FastifyRequest, reply: FastifyReply) => {
+		const refreshToken = request.cookies
+		const [error, refreshTokenDto] = RefreshTokenDto.create(refreshToken)
+		if (error) {
+			reply.statusCode = 401
+			return reply.send({ error })
+		}
+		
+		try {
+			const accessToken = this.authRepository.refreshToken(refreshTokenDto!)
+	
+			reply.statusCode = 200
+			return reply.send({ accessToken })
 		} catch (error) {
 			return this.handleError(error, reply)
 		}

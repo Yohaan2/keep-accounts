@@ -15,6 +15,7 @@ async function main() {
 	const server = new Server({
 		port: envs.PORT,
 		routes: AppRoutes.routes,
+		jwtSeed: envs.JWT_SEED,
 	})
 	await server.start()
 }

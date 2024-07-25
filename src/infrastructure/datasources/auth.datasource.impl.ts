@@ -1,4 +1,4 @@
-import { BcryptAdapter } from '../../config'
+import { BcryptAdapter, JwtAdapter } from '../../config'
 import { User } from '../../data/mongodb'
 import {
 	AuthDatasource,
@@ -6,6 +6,7 @@ import {
 	RegisterUserDto,
 	UserEntity,
 	LoginUserDto,
+	RefreshTokenDto,
 } from '../../domain'
 import { UserMapper } from '../index'
 
@@ -14,8 +15,9 @@ type CompareFunction = (password: string, hash: string) => boolean
 
 export class AuthDatasourceImpl implements AuthDatasource {
 	constructor(
+		private readonly jwt: JwtAdapter,
 		private readonly hashPassword: HashFunction = BcryptAdapter.hash,
-		private readonly comparePassword: CompareFunction = BcryptAdapter.compare
+		private readonly comparePassword: CompareFunction = BcryptAdapter.compare,
 	) {}
 
 	async register(registerUserDto: RegisterUserDto): Promise<UserEntity> {
@@ -51,6 +53,20 @@ export class AuthDatasourceImpl implements AuthDatasource {
 			if (!isValidPassword) throw CustomError.BadRequest('Invalid email or password')
 
 			return UserMapper.userEntityFromObject(user)
+		} catch (error) {
+			if (error instanceof CustomError) {
+				throw error
+			}
+			throw CustomError.InternalServer()
+		}
+	}
+
+	async refreshToken(refresTokenDto: RefreshTokenDto): Promise<String> {
+		try {
+			const validateToken = await this.jwt.verifyToken(refresTokenDto.refreshToken)
+			const accessToken = await this.jwt.generateToken({ email: validateToken.email })
+
+			return accessToken
 		} catch (error) {
 			if (error instanceof CustomError) {
 				throw error

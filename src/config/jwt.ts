@@ -1,27 +1,31 @@
-import jwt from 'jsonwebtoken'
+import { FastifyInstance } from 'fastify'
 import { envs } from './envs'
 
+export const JWT_REFRESS_SEED = envs.JWT_REFRESH_SEED
 export const JWT_SEED = envs.JWT_SEED
 
-export class JwtAdapter {
-	static async generateToken(
-		payload: Object,
-		duration: string = '2h'
-	): Promise<string | null> {
-		return new Promise((resolve) => {
-			jwt.sign(payload, JWT_SEED, { expiresIn: duration }, (err, token) => {
-				if (err) return resolve(null)
-				resolve(token!)
-			})
-		})
+export interface JwtAdapterInterface {
+  generateToken(payload: { email: string }): Promise<string>
+  generateRefreshtoken(payload: { email: string }): Promise<string>
+  verifyToken(token: string): Promise<{ email: string }>
+}
+
+export class JwtAdapter implements JwtAdapterInterface {
+	constructor(
+		public readonly jwt: FastifyInstance,
+	) {
+	}
+	async generateToken(
+		payload: { email: string },
+	): Promise<string> {
+		return this.jwt.jwt.sign(payload, { expiresIn: Math.floor(Date.now() / 1000) + 60 * 60 * 5})
 	}
 
-	static async validateToken<T>(token: string): Promise<T | null> {
-		return new Promise((resolve) => {
-			jwt.verify(token, JWT_SEED, (err, decoded) => {
-				if (err) return resolve(null)
-				resolve(decoded as T)
-			})
-		})
+	async generateRefreshtoken(payload: { email: string }): Promise<string> {
+		return this.jwt.jwt.sign(payload, { expiresIn: Math.floor(Date.now() / 1000) + 60 * 60 + 5, key: JWT_REFRESS_SEED})
+	}
+
+	async verifyToken(token: string, seed?: string): Promise<{ email: string }> {
+		return this.jwt.jwt.verify<{ email: string }>(token,{ key: seed || JWT_SEED })
 	}
 }

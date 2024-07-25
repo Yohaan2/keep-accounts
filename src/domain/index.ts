@@ -3,6 +3,7 @@ export * from './dtos/auth/register-user.dto'
 export * from './dtos/auth/login-user.dto'
 export * from './dtos/client/client-create.dto'
 export * from './dtos/client/client-amount.dto'
+export * from './dtos/auth/refresh-token.dto'
 // Entities
 export * from './entities/user.entity'
 export * from './entities/client-user.entity'

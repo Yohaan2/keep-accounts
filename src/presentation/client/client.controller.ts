@@ -5,6 +5,7 @@ import {
 	ClientRepository,
 	CustomError,
 } from '../../domain'
+import { CreateClientRequest, RecordDebtRequest } from './client.types'
 
 export class ClientController {
 	constructor(private readonly clientRepository: ClientRepository) {}
@@ -21,7 +22,7 @@ export class ClientController {
 	}
 
 	createClient = async (
-		request: FastifyRequest<{ Body: ClientCreateDto }>,
+		request: FastifyRequest<CreateClientRequest>,
 		reply: FastifyReply
 	) => {
 		const [error, clientCreatDto] = ClientCreateDto.create(request.body)
@@ -31,6 +32,7 @@ export class ClientController {
 		}
 
 		try {
+			console.log(request.user)
 			const client = await this.clientRepository.create(clientCreatDto!)
 
 			reply.statusCode = 201
@@ -42,7 +44,7 @@ export class ClientController {
 	}
 
 	recordDebt = async (
-		request: FastifyRequest<{ Body: ClientAmountDto; Params: { id: string } }>,
+		request: FastifyRequest<RecordDebtRequest>,
 		reply: FastifyReply
 	) => {
 		const [error, clientAmountDto] = ClientAmountDto.create(request.body)
@@ -51,10 +53,12 @@ export class ClientController {
 			return reply.send({ error })
 		}
 
+		const { id } = request.params
+
 		try {
 			const client = await this.clientRepository.recordDebt(
 				clientAmountDto!,
-				request.params.id
+				id,
 			)
 
 			reply.statusCode = 201

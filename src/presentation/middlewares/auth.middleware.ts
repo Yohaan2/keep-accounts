@@ -1,35 +1,20 @@
-import { FastifyReply, FastifyRequest, HookHandlerDoneFunction } from 'fastify'
-import { JwtAdapter } from '../../config'
-import { User } from '../../data/mongodb'
-
+import { FastifyReply, FastifyRequest } from 'fastify'
 export class AuthMiddleware {
 	static async validateJwt(
-		request: FastifyRequest<{ Body: { [key: string]: any } }>,
+		request: FastifyRequest,
 		reply: FastifyReply,
-		done: HookHandlerDoneFunction
 	) {
-		const authorization = request.headers.authorization
-		if (!authorization) return reply.status(401).send({ error: 'No Token provided' })
-		if (!authorization.startsWith('Bearer '))
-			return reply.status(401).send({ error: 'Invalid Bearer Token' })
-
-		const token = authorization.split(' ').at(1) || ''
 
 		try {
-			if (!request.body) request.body = {}
-			const payload = await JwtAdapter.validateToken<{ email: string }>(token)
-			if (!payload) return reply.status(401).send({ error: 'Invalid Token' })
-
-			const user = await User.findOne({ email: payload.email })
-			if (!user) return reply.status(401).send({ error: 'Invalid Token' })
-
-			request.body.user = user
-
-			done()
+			await request.jwtVerify()
 		} catch (error) {
+			if((error as Error).message.includes('The token signature is invalid')){
+				reply.statusCode = 401
+				return reply.send({ error: (error as Error).message })
+			}
 			console.log(error)
 			reply.statusCode = 500
-			return reply.send({ error: 'Internal Server Error' })
+			reply.send({ error: 'Internal Server Error' })
 		}
 	}
 }
