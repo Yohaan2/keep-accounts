@@ -11,6 +11,7 @@ export * from './entities/client-record-amount.entity'
 export * from './entities/client-debts.entity'
 // Errors
 export * from './errors/custom.error'
+export * from './errors/jwt.error'
 // Repositories
 export * from './repositories/auth.repository'
 export * from './repositories/client.repository'

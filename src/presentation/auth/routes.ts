@@ -1,6 +1,5 @@
 import { AuthController } from './auth.controller'
 import { AuthDatasourceImpl, AuthRepositoryImpl } from '../../infrastructure'
-// import { AuthMiddleware } from '../middlewares/auth.middleware'
 import { FastifyInstance } from 'fastify'
 import { JwtAdapter } from '../../config'
 
@@ -19,6 +18,7 @@ export class AuthRoutes {
 				'/',
 				controller.getUsers
 			)
+			fastify.post('/refresh-token', controller.refreshToken)
 		}
 	}
 }

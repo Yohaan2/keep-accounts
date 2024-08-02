@@ -32,7 +32,6 @@ export class ClientController {
 		}
 
 		try {
-			console.log(request.user)
 			const client = await this.clientRepository.create(clientCreatDto!)
 
 			reply.statusCode = 201

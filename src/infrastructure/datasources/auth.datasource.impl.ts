@@ -1,4 +1,4 @@
-import { BcryptAdapter, JwtAdapter } from '../../config'
+import { BcryptAdapter, JWT_REFRESS_SEED, JwtAdapter } from '../../config'
 import { User } from '../../data/mongodb'
 import {
 	AuthDatasource,
@@ -7,6 +7,8 @@ import {
 	UserEntity,
 	LoginUserDto,
 	RefreshTokenDto,
+	isJwtError,
+	JwtError,
 } from '../../domain'
 import { UserMapper } from '../index'
 
@@ -63,14 +65,15 @@ export class AuthDatasourceImpl implements AuthDatasource {
 
 	async refreshToken(refresTokenDto: RefreshTokenDto): Promise<String> {
 		try {
-			const validateToken = await this.jwt.verifyToken(refresTokenDto.refreshToken)
+			const validateToken = await this.jwt.verifyToken(refresTokenDto.refreshToken, JWT_REFRESS_SEED)
 			const accessToken = await this.jwt.generateToken({ email: validateToken.email })
 
 			return accessToken
 		} catch (error) {
-			if (error instanceof CustomError) {
-				throw error
+			if (isJwtError(error)) {
+				throw JwtError.InvalidToken(error.code, error.message)
 			}
+			console.log(error)
 			throw CustomError.InternalServer()
 		}
 	}

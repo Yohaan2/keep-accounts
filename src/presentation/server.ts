@@ -28,7 +28,7 @@ export class Server {
 
 	async start() {
 		this.app.register(fjwt, {
-			secret: this.jwtSeed,
+			secret: this.jwtSeed
 		})
 		this.app.addHook('preHandler', (request: FastifyRequest, reply, done) => {
 			request.jwt = this.app.jwt

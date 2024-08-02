@@ -75,7 +75,7 @@ export class AuthController {
 				maxAge: 1000 * 60 * 60 * 24 * 365
 			})
 			reply.statusCode = 201
-			return reply.send({ user: user.user, token:  user.token })
+			return reply.send({ user: user.user, access_token:  user.token })
 		} catch (error) {
 			return this.handleError(error, reply)
 		}
@@ -85,7 +85,7 @@ export class AuthController {
 		return reply.clearCookie('refresh_token').send({ message: 'Logged out successfully' })
 	}
 
-	refreshToken = (request: FastifyRequest, reply: FastifyReply) => {
+	refreshToken = async (request: FastifyRequest, reply: FastifyReply) => {
 		const refreshToken = request.cookies
 		const [error, refreshTokenDto] = RefreshTokenDto.create(refreshToken)
 		if (error) {
@@ -94,10 +94,10 @@ export class AuthController {
 		}
 		
 		try {
-			const accessToken = this.authRepository.refreshToken(refreshTokenDto!)
+			const accessToken = await this.authRepository.refreshToken(refreshTokenDto!)
 	
 			reply.statusCode = 200
-			return reply.send({ accessToken })
+			return reply.send({ access_token: accessToken })
 		} catch (error) {
 			return this.handleError(error, reply)
 		}

@@ -2,9 +2,9 @@ export class RefreshTokenDto {
   private constructor(public refreshToken: string) {}
 
   static create(payload: { [key: string]: any }): [string?, RefreshTokenDto?] {
-    const { refreshToken } = payload
-    if (!refreshToken) return ['Missing refresh token']
+    const { refresh_token } = payload
+    if (!refresh_token) return ['Missing refresh token']
 
-    return [undefined, new RefreshTokenDto(refreshToken)]
+    return [undefined, new RefreshTokenDto(refresh_token)]
   }
 }

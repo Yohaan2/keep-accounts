@@ -18,11 +18,11 @@ export class JwtAdapter implements JwtAdapterInterface {
 	async generateToken(
 		payload: { email: string },
 	): Promise<string> {
-		return this.jwt.jwt.sign(payload, { expiresIn: Math.floor(Date.now() / 1000) + 60 * 60 * 5})
+		return this.jwt.jwt.sign(payload, { expiresIn: '2h'})
 	}
 
 	async generateRefreshtoken(payload: { email: string }): Promise<string> {
-		return this.jwt.jwt.sign(payload, { expiresIn: Math.floor(Date.now() / 1000) + 60 * 60 + 5, key: JWT_REFRESS_SEED})
+		return this.jwt.jwt.sign(payload, { expiresIn: '5d', key: JWT_REFRESS_SEED})
 	}
 
 	async verifyToken(token: string, seed?: string): Promise<{ email: string }> {

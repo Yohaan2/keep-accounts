@@ -1,4 +1,3 @@
-import { RouteGenericInterface } from "fastify";
 import { ClientAmountDto, ClientCreateDto } from "../../domain";
 
 export interface CreateClientRequest {
