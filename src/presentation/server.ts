@@ -19,7 +19,7 @@ export class Server {
 	private readonly jwtSeed: string
 
 	constructor(options: Options) {
-		const { port = 3100, routes, jwtSeed } = options
+		const { port = 8080, routes, jwtSeed } = options
 
 		this.port = port
 		this.routes = routes
