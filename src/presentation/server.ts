@@ -43,12 +43,12 @@ export class Server {
 		this.app.register(fastifyFormbody) // x-www-form-urlencoded
 		this.routes(this.app)
 
-		this.app.listen({ port: this.port }, (err, address) => {
+		this.app.listen({ port: this.port, host: '0.0.0.0' }, (err, address) => {
 			if (err) {
 				console.error(err)
 				process.exit(1)
 			}
-			console.log(`Server listening on ${address}`)
+			console.log(`Server listening on ${this.port}`)
 		})
 	}
 }
