@@ -7,9 +7,12 @@ import {
 	CustomError,
 	IDebt,
 } from '../../domain'
+import { DivisaService } from '../services/divisa.service'
 
 export class ClientDatasourceImpl implements ClientDatasource {
-	constructor() {}
+	constructor(
+		private readonly divisaService: DivisaService = new DivisaService()
+	) {}
 
 	async create(clientCreateDto: ClientCreateDto): Promise<ClientUserEntity> {
 		const { name } = clientCreateDto
@@ -63,13 +66,15 @@ export class ClientDatasourceImpl implements ClientDatasource {
 			const client = await Client.findById(id)
 
 			if (!client) throw CustomError.NotFound('Client not found')
+				const totaDolar = await this.divisaService.convertBsToDolar(client.total)
 
 			return new ClientUserEntity(
 				client.id,
 				client.name,
 				client.createdAt as Date,
 				client.total,
-				client.debt as IDebt[]
+				client.debt as IDebt[],
+				totaDolar
 			)
 		} catch (error) {
 			if (error instanceof CustomError) {

@@ -1,5 +1,4 @@
-import { Types } from 'mongoose'
-import { ClientRecordAmountEntity, IDebt } from '..'
+import { IDebt } from '..'
 
 export class ClientUserEntity {
 	constructor(
@@ -7,6 +6,7 @@ export class ClientUserEntity {
 		public name: string,
 		public createdAt: Date,
 		public total: number,
-		public debt?: IDebt[]
+		public debt?: IDebt[],
+		public totalDolar?: string,
 	) {}
 }

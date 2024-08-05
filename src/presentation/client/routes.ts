@@ -1,7 +1,6 @@
 import { FastifyInstance } from 'fastify'
 import { ClientController } from './client.controller'
 import { ClientDatasourceImpl, ClientRepositoryImpl } from '../../infrastructure'
-// import { AuthMiddleware } from '../middlewares/auth.middleware'
 
 export class ClientRoutes {
 	static get routes() {
@@ -22,7 +21,9 @@ export class ClientRoutes {
 				},
 				controller.recordDebt
 			)
-			fastify.get('/:id/debts', controller.getDebts)
+			fastify.get('/:id/debts',{
+				preHandler: fastify.authenticate
+			} ,controller.getDebts)
 		}
 	}
 }
