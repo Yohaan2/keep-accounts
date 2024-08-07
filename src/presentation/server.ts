@@ -54,6 +54,7 @@ export class Server {
 					url: 'https://swagger.io',
 					description: 'Find more info here'
 				},
+				host: '0.0.0.0',
 				schemes: ['http', 'https'],
 				consumes: ['application/json'],
 				produces: ['application/json'],
