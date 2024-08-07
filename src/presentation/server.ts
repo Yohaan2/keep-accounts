@@ -62,6 +62,7 @@ export class Server {
           type: 'apiKey',
           name: 'authorization',
           in: 'header',
+					description: 'Enter the token with the `Bearer: `'
         }
       }
 			}
