@@ -11,7 +11,20 @@ export class AuthRoutes {
 			const authRepository = new AuthRepositoryImpl(datasource)
 			const controller = new AuthController(authRepository, jwtAdapter)
 
-			fastify.post('/login', controller.login)
+			fastify.post('/login', {
+				schema: {
+					description: 'Login User',
+					tags: ['Auth'],
+					body: {
+						type: 'object',
+						required: ['email', 'password'],
+						properties: {
+							email: { type: 'string' },
+							password: { type: 'string' },
+						}
+					},
+				}
+			}, controller.login)
 			fastify.post('/register', controller.register)
 			fastify.get('/logout', controller.logout)
 			fastify.get(

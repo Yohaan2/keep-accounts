@@ -2,6 +2,8 @@ import fastifyFormbody from '@fastify/formbody'
 import fastify, { FastifyInstance, FastifyRequest } from 'fastify'
 import fjwt from '@fastify/jwt'
 import fastifyCookie from '@fastify/cookie'
+import fastifySwagger from '@fastify/swagger'
+import fastifySwaggerUi from '@fastify/swagger-ui'
 import { AuthMiddleware } from './middlewares/auth.middleware'
 
 interface Options {
@@ -41,6 +43,44 @@ export class Server {
 		})
 		this.app.decorate('authenticate', AuthMiddleware.validateJwt)
 		this.app.register(fastifyFormbody) // x-www-form-urlencoded
+		this.app.register(fastifySwagger, {
+			swagger: {
+				info:{
+					title: 'Keep Account',
+					description: 'Keep Account API',
+					version: '1.0.0'
+				},
+				externalDocs: {
+					url: 'https://swagger.io',
+					description: 'Find more info here'
+				},
+				schemes: ['http', 'https'],
+				consumes: ['application/json'],
+				produces: ['application/json'],
+				securityDefinitions: {
+        authorization: {
+          type: 'apiKey',
+          name: 'authorization',
+          in: 'header',
+        }
+      }
+			}
+		})
+		this.app.register(fastifySwaggerUi, {
+			routePrefix: '/docs',
+			uiConfig: {
+				docExpansion: 'list',
+				deepLinking: false,
+			},
+			uiHooks: {
+				onRequest: function (request, reply, next) { next()},
+				preHandler: function (request, reply, next) { next()}
+			},
+			staticCSP: true,
+			transformStaticCSP: (header) => header,
+			transformSpecification: (swaggerObject, request, reply) => { return swaggerObject },
+			transformSpecificationClone: true
+		})
 		this.routes(this.app)
 
 		this.app.listen({ port: this.port, host: '0.0.0.0' }, (err, address) => {
