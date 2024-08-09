@@ -49,7 +49,7 @@ export class AuthController {
 			})
 
 			reply.statusCode = 201
-			return reply.send({ user: user.user, token: user.token })
+			return reply.send({ access_token:  user.token, user: user.user })
 		} catch (error) {
 			return this.handleError(error, reply)
 		}
@@ -75,7 +75,7 @@ export class AuthController {
 				maxAge: 1000 * 60 * 60 * 24 * 365
 			})
 			reply.statusCode = 201
-			return reply.send({ user: user.user, access_token:  user.token })
+			return reply.send({ access_token:  user.token, user: user.user })
 		} catch (error) {
 			return this.handleError(error, reply)
 		}

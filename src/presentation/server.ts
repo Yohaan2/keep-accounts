@@ -44,28 +44,53 @@ export class Server {
 		this.app.decorate('authenticate', AuthMiddleware.validateJwt)
 		this.app.register(fastifyFormbody) // x-www-form-urlencoded
 		this.app.register(fastifySwagger, {
-			swagger: {
-				info:{
+			// swagger: {
+			// 	info:{
+			// 		title: 'Keep Account',
+			// 		description: 'Keep Account API',
+			// 		version: '1.0.0'
+			// 	},
+			// 	externalDocs: {
+			// 		url: 'https://swagger.io',
+			// 		description: 'Find more info here'
+			// 	},
+			// 	host: '0.0.0.0',
+			// 	schemes: ['http', 'https'],
+			// 	consumes: ['application/json'],
+			// 	produces: ['application/json'],
+			// 	securityDefinitions: {
+      //   authorization: {
+      //     type: 'apiKey',
+      //     name: 'authorization',
+      //     in: 'header',
+			// 		description: 'Enter the token with the `Bearer: `'
+      //   }
+      // }
+			// },
+			openapi: {
+				info: {
 					title: 'Keep Account',
 					description: 'Keep Account API',
 					version: '1.0.0'
 				},
+				servers:[
+					{
+						url: 'https://keep-accounts.onrender.com/',
+					}
+				],
 				externalDocs: {
 					url: 'https://swagger.io',
 					description: 'Find more info here'
 				},
-				host: '0.0.0.0',
-				schemes: ['http', 'https'],
-				consumes: ['application/json'],
-				produces: ['application/json'],
-				securityDefinitions: {
-        authorization: {
-          type: 'apiKey',
-          name: 'authorization',
-          in: 'header',
-					description: 'Enter the token with the `Bearer: `'
-        }
-      }
+				components: {
+					securitySchemes: {
+						bearerAuth: {
+							type: 'http',
+							scheme: 'bearer', 
+							bearerFormat: 'JWT'
+						}
+					}
+				}
 			}
 		})
 		this.app.register(fastifySwaggerUi, {
@@ -81,7 +106,7 @@ export class Server {
 			staticCSP: true,
 			transformStaticCSP: (header) => header,
 			transformSpecification: (swaggerObject, request, reply) => { return swaggerObject },
-			transformSpecificationClone: true
+			transformSpecificationClone: true,
 		})
 		this.routes(this.app)
 

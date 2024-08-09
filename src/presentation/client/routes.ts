@@ -1,6 +1,7 @@
 import { FastifyInstance } from 'fastify'
 import { ClientController } from './client.controller'
 import { ClientDatasourceImpl, ClientRepositoryImpl } from '../../infrastructure'
+import { clientCreateSchema } from './client.docs'
 
 export class ClientRoutes {
 	static get routes() {
@@ -11,23 +12,7 @@ export class ClientRoutes {
 
 			fastify.post(
 				'/create',{
-					preHandler: fastify.authenticate, 
-					schema: {
-						description: 'Create Client',
-						tags: ['Client'],
-						security: [
-							{
-								authorization: []
-							}
-						],
-						body: {
-							type: 'object',
-							required: ['name'],
-							properties: {
-								name: { type: 'string' },
-							}
-						},
-					}
+					preHandler: fastify.authenticate, schema: clientCreateSchema
 				},
 				controller.createClient
 			)
