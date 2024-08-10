@@ -28,6 +28,7 @@ export class RegisterUser implements RegisterUserUseCase {
 				id: user.id,
 				name: user.name,
 				email: user.email,
+				role: user.roles,
 			},
 		}
 	}
