@@ -8,6 +8,7 @@
     "dev": "tsnd --respawn --clear src/app.ts",
     "build": "rimraf ./dist && tsc",
     "copy-assets": "cp -R src/assets dist/src/",
+    "copy-assets-on-windows": "xcopy /E /I src\\assets dist\\src\\assets",
     "start": "yarn run build && yarn run copy-assets && node dist/src/app.js",
     "test": "mocha"
   },
