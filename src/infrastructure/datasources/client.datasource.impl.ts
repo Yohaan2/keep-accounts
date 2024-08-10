@@ -51,6 +51,7 @@ export class ClientDatasourceImpl implements ClientDatasource {
 				clientUpdated.name,
 				clientUpdated.createdAt as Date,
 				clientUpdated.total,
+				undefined,
 				clientUpdated.debt as IDebt[]
 			)
 		} catch (error) {
@@ -73,8 +74,8 @@ export class ClientDatasourceImpl implements ClientDatasource {
 				client.name,
 				client.createdAt as Date,
 				client.total,
+				totaDolar,
 				client.debt as IDebt[],
-				totaDolar
 			)
 		} catch (error) {
 			if (error instanceof CustomError) {
