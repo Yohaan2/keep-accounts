@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "tsnd --respawn --clear src/app.ts",
     "build": "rimraf ./dist && tsc",
-    "start": "yarn run build && node dist/src/app.js",
+    "copy-assets": "cp -R src/assets dist/src/",
+    "start": "yarn run build && yarn run copy-assets && node dist/src/app.js",
     "test": "mocha"
   },
   "devDependencies": {
