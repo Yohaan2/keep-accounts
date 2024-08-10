@@ -22,8 +22,13 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Build
+      - name: Install dependencies
         run: yarn install
+
+      - name: Prepare test configuration
+        run: |
+          cp tsconfig.test.json tsconfig.json
+          cp package.test.json package.json
 
       - name: Test
         run: yarn test
