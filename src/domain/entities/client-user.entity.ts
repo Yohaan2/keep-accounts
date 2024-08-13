@@ -6,7 +6,7 @@ export class ClientUserEntity {
 		public name: string,
 		public createdAt: Date,
 		public total: number,
-		public debt?: IDebt[],
 		public totalDolar?: string,
+		public debt?: IDebt[],
 	) {}
 }

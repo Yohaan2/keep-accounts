@@ -27,6 +27,7 @@ export class LoginUser implements LoginUserUseCase {
 				id: user.id,
 				name: user.name,
 				email: user.email,
+				role: user.roles,
 			},
 		}
 	}
