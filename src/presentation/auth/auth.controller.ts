@@ -102,18 +102,4 @@ export class AuthController {
 			return this.handleError(error, reply)
 		}
 	}
-
-	getUsers = (
-		request: FastifyRequest<{ Body: { [key: string]: any } }>,
-		reply: FastifyReply
-	) => {
-		User.find()
-			.then((users) => {
-				reply.send({
-					// users,
-					user: request.body.user,
-				})
-			})
-			.catch(() => reply.status(500).send({ error: 'Internal server error' }))
-	}
 }

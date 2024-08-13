@@ -2,7 +2,7 @@ import { AuthController } from './auth.controller'
 import { AuthDatasourceImpl, AuthRepositoryImpl } from '../../infrastructure'
 import { FastifyInstance } from 'fastify'
 import { JwtAdapter } from '../../config'
-import { loginUserSchema, logoutUserSchema, registerUserSchema } from './auth.docs'
+import { loginUserSchema, logoutUserSchema, refreshTokenSchema, registerUserSchema } from './auth.docs'
 
 export class AuthRoutes {
 	static get routes() {
@@ -15,11 +15,7 @@ export class AuthRoutes {
 			fastify.post('/login', { schema: loginUserSchema }, controller.login)
 			fastify.post('/register',{ schema: registerUserSchema}, controller.register)
 			fastify.get('/logout', { schema: logoutUserSchema } , controller.logout)
-			fastify.get(
-				'/',
-				controller.getUsers
-			)
-			fastify.post('/refresh-token', controller.refreshToken)
+			fastify.post('/refresh-token', { schema:  refreshTokenSchema }, controller.refreshToken)
 		}
 	}
 }

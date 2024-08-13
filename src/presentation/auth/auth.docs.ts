@@ -78,3 +78,19 @@ export const logoutUserSchema: FastifySchema = {
     },
   },
 }
+
+export const refreshTokenSchema: FastifySchema = {
+  tags: [MAIN_TAG],
+  summary: 'Puedes refrescar el token cuando el access token se ha expirado',
+  response: {
+    200: {
+      description: 'Successful response',
+      type: 'object',
+      properties: {
+        access_token: {
+          type: 'string',
+        },
+      },
+    },
+  },
+}
