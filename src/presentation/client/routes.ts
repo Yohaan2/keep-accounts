@@ -12,7 +12,7 @@ export class ClientRoutes {
 
 			fastify.post(
 				'/create',{
-					preHandler: fastify.authenticate
+					preHandler: fastify.authenticate, schema: clientCreateSchema
 				},
 				controller.createClient
 			)
