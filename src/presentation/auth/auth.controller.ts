@@ -7,13 +7,13 @@ import {
 	LoginUserDto,
 	LoginUser,
 	RefreshTokenDto,
-} from '../../domain'
-import { User } from '../../data/mongodb'
+} from '../../domain/index.ts'
 import { LoginUserRequest, RegisterUserRequest } from './auth.types'
 import { JwtAdapter } from '../../config'
 
 export class AuthController {
-	constructor(private readonly authRepository: AuthRepository, 
+	constructor(
+		private readonly authRepository: AuthRepository, 
 		private readonly jwt: JwtAdapter
 	) {}
 
@@ -41,12 +41,12 @@ export class AuthController {
 		try {
 			const user = await new RegisterUser(this.authRepository, this.jwt).execute(registerUserDto!)
 
-			reply.setCookie('refresh_token', user.refreshToken, {
-				httpOnly: true,
-				secure: true,
-				path:'/',
-				maxAge: 1000 * 60 * 60 * 24 * 365
-			})
+			// reply.setCookie('refresh_token', user.refreshToken, {
+			// 	httpOnly: true,
+			// 	secure: true,
+			// 	path:'/',
+			// 	maxAge: 1000 * 60 * 60 * 24 * 365
+			// })
 
 			reply.statusCode = 201
 			return reply.send({ access_token:  user.token, user: user.user })
@@ -68,12 +68,12 @@ export class AuthController {
 		try {
 			const user = await new LoginUser(this.authRepository, this.jwt).execute(loginUserDto!)
 
-			reply.setCookie('refresh_token', user.refreshToken, {
-				httpOnly: true,
-				secure: true,
-				path:'/',
-				maxAge: 1000 * 60 * 60 * 24 * 365
-			})
+			// reply.setCookie('refresh_token', user.refreshToken, {
+			// 	httpOnly: true,
+			// 	secure: true,
+			// 	path:'/',
+			// 	maxAge: 1000 * 60 * 60 * 24 * 365
+			// })
 			reply.statusCode = 201
 			return reply.send({ access_token:  user.token, user: user.user })
 		} catch (error) {
@@ -82,12 +82,12 @@ export class AuthController {
 	}
 
 	logout = (_request: FastifyRequest, reply: FastifyReply) => {
-		return reply.clearCookie('refresh_token').send({ message: 'Logged out successfully' })
+		return reply.send({ message: 'Logged out successfully' })
 	}
 
 	refreshToken = async (request: FastifyRequest, reply: FastifyReply) => {
-		const refreshToken = request.cookies
-		const [error, refreshTokenDto] = RefreshTokenDto.create(refreshToken)
+		// const refreshToken = request.cookies
+		const [error, refreshTokenDto] = RefreshTokenDto.create({refresh_token: 'token'})
 		if (error) {
 			reply.statusCode = 401
 			return reply.send({ error })

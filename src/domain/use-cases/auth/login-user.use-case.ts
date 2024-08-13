@@ -1,8 +1,8 @@
-import { JwtAdapter } from '../../../config'
-import { LoginUserDto } from '../../dtos/auth/login-user.dto'
-import { CustomError } from '../../errors/custom.error'
-import { AuthRepository } from '../../repositories/auth.repository'
-import { UserToken } from '../../types/auth.types'
+import { JwtAdapter } from '../../../config/index.ts'
+import { LoginUserDto } from '../../dtos/auth/login-user.dto.ts'
+import { CustomError } from '../../errors/custom.error.ts'
+import { AuthRepository } from '../../repositories/auth.repository.ts'
+import { UserToken } from '../../types/auth.types.ts'
 
 interface LoginUserUseCase {
 	execute(loginUserDto: LoginUserDto): Promise<UserToken>
@@ -27,7 +27,7 @@ export class LoginUser implements LoginUserUseCase {
 				id: user.id,
 				name: user.name,
 				email: user.email,
-				role: user.roles,
+				roles: user.roles,
 			},
 		}
 	}

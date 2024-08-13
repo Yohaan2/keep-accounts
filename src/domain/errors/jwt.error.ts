@@ -1,5 +1,5 @@
-import { TOKEN_ERROR_CODES } from "../../config";
-import { CustomError } from "./custom.error";
+import { TOKEN_ERROR_CODES } from "../../config/index.ts";
+import { CustomError } from "./custom.error.ts";
 
 export function isJwtError(error: any): error is { code: string, message: string } {
   return error && typeof error === 'object' && TOKEN_ERROR_CODES.includes(error.code);

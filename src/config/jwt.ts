@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify'
-import { envs } from './envs'
+import { envs } from './envs.ts'
 
 export const JWT_REFRESS_SEED = envs.JWT_REFRESH_SEED
 export const JWT_SEED = envs.JWT_SEED
