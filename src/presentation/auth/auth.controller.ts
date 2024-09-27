@@ -7,7 +7,7 @@ import {
 	LoginUserDto,
 	LoginUser,
 	RefreshTokenDto,
-} from '../../domain/index.ts'
+} from '../../domain/index'
 import { LoginUserRequest, RegisterUserRequest } from './auth.types'
 import { JwtAdapter } from '../../config'
 

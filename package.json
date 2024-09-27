@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
-  "type": "commonjs",
   "scripts": {
     "dev": "tsnd --respawn --clear src/app.ts",
     "build": "rimraf ./dist && tsc",
@@ -48,5 +47,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.4.4",
     "mongoose-autopopulate": "^1.1.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
   }
 }

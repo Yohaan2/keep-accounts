@@ -1,8 +1,8 @@
-import { JwtAdapter } from '../../../config/index.ts'
-import { RegisterUserDto } from '../../index.ts'
-import { CustomError } from '../../errors/custom.error.ts'
-import { AuthRepository } from '../../repositories/auth.repository.ts'
-import { UserToken } from '../../types/auth.types.ts'
+import { JwtAdapter } from '../../../config/index'
+import { RegisterUserDto } from '../../index'
+import { CustomError } from '../../errors/custom.error'
+import { AuthRepository } from '../../repositories/auth.repository'
+import { UserToken } from '../../types/auth.types'
 
 interface RegisterUserUseCase {
 	execute(registerUserDto: RegisterUserDto): Promise<UserToken>

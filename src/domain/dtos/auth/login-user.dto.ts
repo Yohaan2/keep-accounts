@@ -1,4 +1,4 @@
-import { Validators } from '../../../config/index.ts'
+import { Validators } from '../../../config/index'
 
 export class LoginUserDto {
 	private constructor(public email: string, public password: string) {}

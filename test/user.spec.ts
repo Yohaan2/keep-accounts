@@ -2,12 +2,12 @@ import { use, expect } from 'chai'
 import sinon, { SinonStub} from 'sinon'
 import sinonChai from 'sinon-chai'
 use(sinonChai)
-import { AuthController } from '../src/presentation/auth/auth.controller.ts'
-import { AuthRepositoryImpl } from '../src/infrastructure/repositories/auth.repositories.impl.ts'
-import { JwtAdapter } from '../src/config/jwt.ts'
+import { AuthController } from '../src/presentation/auth/auth.controller'
+import { AuthRepositoryImpl } from '../src/infrastructure/repositories/auth.repositories.impl'
+import { JwtAdapter } from '../src/config/jwt'
 import { FastifyReply, FastifyRequest } from 'fastify'
-import { RegisterUserDto } from '../src/domain/index.ts'
-import { RegisterUserRequest } from '../src/presentation/auth/auth.types.ts'
+import { RegisterUserDto } from '../src/domain/index'
+import { RegisterUserRequest } from '../src/presentation/auth/auth.types'
 const sandbox = sinon.createSandbox()
 
 describe('User', () => {
