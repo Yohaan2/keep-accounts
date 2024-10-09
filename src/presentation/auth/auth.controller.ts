@@ -7,9 +7,12 @@ import {
 	LoginUserDto,
 	LoginUser,
 	RefreshTokenDto,
+	isJwtError,
+	JwtError,
 } from '../../domain/index'
 import { LoginUserRequest, RegisterUserRequest } from './auth.types'
-import { JwtAdapter } from '../../config'
+import { JWT_REFRESS_SEED, JwtAdapter } from '../../config'
+import { User } from '../../data/mongodb'
 
 export class AuthController {
 	constructor(
@@ -68,12 +71,10 @@ export class AuthController {
 		try {
 			const user = await new LoginUser(this.authRepository, this.jwt).execute(loginUserDto!)
 
-			// reply.setCookie('refresh_token', user.refreshToken, {
-			// 	httpOnly: true,
-			// 	secure: true,
-			// 	path:'/',
-			// 	maxAge: 1000 * 60 * 60 * 24 * 365
-			// })
+			reply
+			.setCookie('refresh_token', user.refreshToken, { maxAge: 1000 * 60 * 60 * 24 * 10 })
+			.setCookie('access_token', user.token, { maxAge: 1000 * 60 * 60 * 24 * 2 })
+
 			reply.statusCode = 201
 			return reply.send({ access_token:  user.token, user: user.user })
 		} catch (error) {
@@ -82,24 +83,54 @@ export class AuthController {
 	}
 
 	logout = (_request: FastifyRequest, reply: FastifyReply) => {
+		reply.clearCookie('refresh_token')
 		return reply.send({ message: 'Logged out successfully' })
 	}
 
 	refreshToken = async (request: FastifyRequest, reply: FastifyReply) => {
-		// const refreshToken = request.cookies
-		const [error, refreshTokenDto] = RefreshTokenDto.create({refresh_token: 'token'})
+		const { headers } = request
+		const refreshToken = headers.authorization?.split(' ')[1]
+		const [error, refreshTokenDto] = RefreshTokenDto.create({refresh_token: refreshToken})
 		if (error) {
 			reply.statusCode = 401
 			return reply.send({ error })
 		}
 		
 		try {
-			const accessToken = await this.authRepository.refreshToken(refreshTokenDto!)
+			const {accessToken, refreshToken} = await this.authRepository.refreshToken(refreshTokenDto!)
 	
+			reply
+			.setCookie('access_token', accessToken, { maxAge: 1000 * 60 * 60 * 24 * 2 })
+			.setCookie('refresh_token', refreshToken, { maxAge: 1000 * 60 * 60 * 24 * 10 })
+			
 			reply.statusCode = 200
 			return reply.send({ access_token: accessToken })
 		} catch (error) {
 			return this.handleError(error, reply)
 		}
+	}
+
+	verifyToken = async (request: FastifyRequest, reply: FastifyReply) => {
+		const { headers } = request
+		const token = headers.authorization?.split(' ')[1]
+
+		try {
+			if(!token) {
+				reply.statusCode = 401
+				return reply.send({ error: 'Unauthorized' })
+			}
+				await this.jwt.verifyToken(token)
+				reply.statusCode = 200
+				return reply.send({ message: 'Token is valid' })
+
+			} catch (error) {
+			if(isJwtError(error)){
+				reply.statusCode = 401
+				throw JwtError.InvalidToken(error.code, error.message)
+			}
+			console.log(error)
+			throw CustomError.InternalServer()
+		}
+		
 	}
 }

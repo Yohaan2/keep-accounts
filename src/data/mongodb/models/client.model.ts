@@ -17,7 +17,10 @@ const clientSchema = new Schema({
 		type: String,
 		required: [true, 'Name us required'],
 	},
-	debt: [debtSchema],
+	debt: {
+		type : [debtSchema],
+		default: [],
+	},
 	total: {
 		type: Number,
 		default: 0,

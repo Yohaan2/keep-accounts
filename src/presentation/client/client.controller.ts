@@ -5,7 +5,7 @@ import {
 	ClientRepository,
 	CustomError,
 } from '../../domain'
-import { CreateClientRequest, RecordDebtRequest } from './client.types'
+import { CreateClientRequest, RecordDebtRequest, ReduceAccountRequest } from './client.types'
 
 export class ClientController {
 	constructor(private readonly clientRepository: ClientRepository) {}
@@ -67,14 +67,63 @@ export class ClientController {
 		}
 	}
 
-	getDebts = async (
+	getDebtsById = async (
 		request: FastifyRequest<{ Params: { id: string } }>,
 		reply: FastifyReply
 	) => {
 		try {
-			const client = await this.clientRepository.getDebts(request.params.id)
+			const client = await this.clientRepository.getDebtsById(request.params.id)
 			reply.statusCode = 200
 			return reply.send(client)
+		} catch (error) {
+			return this.handleError(error, reply)
+		}
+	}
+
+	getClients = async (
+		request: FastifyRequest,
+		reply: FastifyReply
+	) => {
+		try {
+			const clients = await this.clientRepository.getClients()
+			reply.statusCode = 200
+			return reply.send(clients)
+		} catch (error) {
+			return this.handleError(error, reply)
+		}
+	}
+
+	deleteClient = async (
+		request: FastifyRequest<{ Params: { id: string }}>, 
+		reply: FastifyReply
+	) => {
+		const { id } = request.params
+		try {
+			const response = await this.clientRepository.deleteClient(id)
+			reply.statusCode = 200
+			return reply.send({message: response})
+		} catch (error) {
+			return this.handleError(error, reply)
+		}
+	}
+
+	reduceAccount = async (
+		request: FastifyRequest<ReduceAccountRequest>, 
+		reply: FastifyReply
+	) => {
+		const { id } = request.params
+		const [error, clientAmountDto] = ClientAmountDto.create(request.body)
+
+		if (error) {
+			reply.statusCode = 400
+			return reply.send({ error })
+		}
+		
+		try {
+			const client = await this.clientRepository.reduceAccount(id, clientAmountDto!.amount)
+			reply.statusCode = 200
+			return reply.send(client)
+			
 		} catch (error) {
 			return this.handleError(error, reply)
 		}

@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify'
 import { ClientController } from './client.controller'
 import { ClientDatasourceImpl, ClientRepositoryImpl } from '../../infrastructure'
-import { clientCreateSchema, clientGetDebtsSchema, clientRecordDebtSchema } from './client.docs'
+import { clientCreateSchema, clientGetDebtsSchema, clientRecordDebtSchema, clientReduceAccountSchema } from './client.docs'
 
 export class ClientRoutes {
 	static get routes() {
@@ -24,7 +24,24 @@ export class ClientRoutes {
 			)
 			fastify.get('/:id/debts',{
 				preHandler: fastify.authenticate, schema: clientGetDebtsSchema
-			} ,controller.getDebts)
+			},
+				controller.getDebtsById
+			)
+			fastify.get('/get-clients', {
+				preHandler: fastify.authenticate
+			}, 
+				controller.getClients
+			)
+			fastify.delete('/:id', {
+				preHandler: fastify.authenticate
+			}, 
+				controller.deleteClient
+			)
+			fastify.put('/reduce-account/:id',{
+				preHandler: fastify.authenticate, schema: clientReduceAccountSchema
+			}, 
+				controller.reduceAccount
+			)
 		}
 	}
 }

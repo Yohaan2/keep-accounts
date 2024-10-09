@@ -18,7 +18,7 @@ export class AuthRepositoryImpl implements AuthRepository {
 		return this.authDatasource.login(loginUserDto)
 	}
 
-	refreshToken(refresTokenDto: RefreshTokenDto): Promise<String> {
+	refreshToken(refresTokenDto: RefreshTokenDto): Promise<{ accessToken: string, refreshToken: string }> {
 		return this.authDatasource.refreshToken(refresTokenDto)
 	}
 }

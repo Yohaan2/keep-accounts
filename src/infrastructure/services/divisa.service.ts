@@ -1,6 +1,6 @@
 export interface IDivisaService {
   getDollarPrice(): Promise<number>
-  convertBsToDolar(amount: number): Promise<string>
+  convertBsToDolar(amount: number): string
 }
 
 export class DivisaService implements IDivisaService {
@@ -14,7 +14,7 @@ export class DivisaService implements IDivisaService {
     return data.price
   }
 
-  async convertBsToDolar(amount: number): Promise<string>{
-    return (amount / await this.getDollarPrice()).toFixed(2) + '$'
+  convertBsToDolar(amount: number): string{
+    return (amount / 37).toFixed(2) + '$'
   }
 }

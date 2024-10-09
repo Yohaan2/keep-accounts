@@ -63,12 +63,16 @@ export class AuthDatasourceImpl implements AuthDatasource {
 		}
 	}
 
-	async refreshToken(refresTokenDto: RefreshTokenDto): Promise<String> {
+	async refreshToken(refresTokenDto: RefreshTokenDto): Promise<{ accessToken: string, refreshToken: string }> {
 		try {
 			const validateToken = await this.jwt.verifyToken(refresTokenDto.refreshToken, JWT_REFRESS_SEED)
+			const refreshToken = await this.jwt.generateRefreshtoken({ email: validateToken.email })
 			const accessToken = await this.jwt.generateToken({ email: validateToken.email })
 
-			return accessToken
+			return {
+				accessToken,
+				refreshToken,
+			}
 		} catch (error) {
 			if (isJwtError(error)) {
 				throw JwtError.InvalidToken(error.code, error.message)

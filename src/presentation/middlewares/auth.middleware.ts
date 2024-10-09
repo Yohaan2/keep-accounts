@@ -9,8 +9,14 @@ export class AuthMiddleware {
 	) {
 
 		try {
+			const token = request.cookies.access_token
 
-			await request.jwtVerify()
+			if (!token) {
+				reply.statusCode = 401
+				return reply.send({ error: 'Unauthorized' })
+			}
+			//aqui esta el email del user
+			const verifyToken = request.jwt.verify(token)
 
 		} catch (error) {
 			if(isJwtError(error)){

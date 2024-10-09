@@ -21,6 +21,8 @@ export const clientCreateSchema: FastifySchema = {
         name: { type: 'string' }, 
         createdAt: { type: 'string' },
         total: { type: 'number' },
+        totalDolar: { type: 'string' },
+        debt: { type: 'array' }
       }
     }
   }
@@ -53,6 +55,19 @@ export const clientRecordDebtSchema: FastifySchema = {
         name: { type: 'string' }, 
         createdAt: { type: 'string' },
         total: { type: 'number' },
+        totalDolar: { type: 'string' },
+        debt: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              amount: { type: 'number' },
+              description: { type: 'string' },
+              createdAt: { type: 'string' },
+              '_id': { type: 'string' },
+            }
+          }
+        }
       }
     }
   }
@@ -66,6 +81,49 @@ export const clientGetDebtsSchema: FastifySchema = {
     type: 'object',
     properties: {
       id: { type: 'string' },
+    },
+  },
+  response: {
+    200: {
+      description: 'Successful response',
+      type: 'object',
+      properties: {
+        id: { type: 'string' }, 
+        name: { type: 'string' }, 
+        createdAt: { type: 'string' },
+        total: { type: 'number' },
+        totalDolar: { type: 'string' },
+        debt: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              amount: { type: 'number' },
+              description: { type: 'string' },
+              createdAt: { type: 'string' },
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+export const clientReduceAccountSchema: FastifySchema = {
+  tags: [MAIN_TAG],
+  security: [{ bearerAuth: [] }],
+  summary: 'Puedes reducir la cuenta de un cliente',
+  params: {
+    type: 'object',
+    properties: {
+      id: { type: 'string' },
+    },
+  },
+  body: {
+    type: 'object',
+    required: ['amount'],
+    properties: {
+      amount: { type: 'number' },
     },
   },
   response: {
