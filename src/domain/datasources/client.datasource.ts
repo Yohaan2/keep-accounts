@@ -10,5 +10,6 @@ export abstract class ClientDatasource {
 	abstract getDebtsById(id: string): Promise<ClientUserEntity>
 	abstract getClients(): Promise<ClientUserEntity[]>
 	abstract deleteClient(id: string): Promise<string>
-	abstract reduceAccount(id:string, amount: number): Promise<ClientUserEntity>
+	abstract reduceAccount(id: string, amount: number): Promise<ClientUserEntity>
+	abstract resetAccount(id: string): Promise<ClientUserEntity>
 }

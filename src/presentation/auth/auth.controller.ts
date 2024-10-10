@@ -11,8 +11,7 @@ import {
 	JwtError,
 } from '../../domain/index'
 import { LoginUserRequest, RegisterUserRequest } from './auth.types'
-import { JWT_REFRESS_SEED, JwtAdapter } from '../../config'
-import { User } from '../../data/mongodb'
+import { JwtAdapter } from '../../config'
 
 export class AuthController {
 	constructor(
@@ -44,12 +43,9 @@ export class AuthController {
 		try {
 			const user = await new RegisterUser(this.authRepository, this.jwt).execute(registerUserDto!)
 
-			// reply.setCookie('refresh_token', user.refreshToken, {
-			// 	httpOnly: true,
-			// 	secure: true,
-			// 	path:'/',
-			// 	maxAge: 1000 * 60 * 60 * 24 * 365
-			// })
+			reply
+				.setCookie('refresh_token', user.refreshToken, { maxAge: 1000 * 60 * 60 * 24 * 365 })
+				.setCookie('access_token', user.token, { maxAge: 1000 * 60 * 60 * 24 * 2 })
 
 			reply.statusCode = 201
 			return reply.send({ access_token:  user.token, user: user.user })
@@ -132,5 +128,15 @@ export class AuthController {
 			throw CustomError.InternalServer()
 		}
 		
+	}
+
+	getUser = async (request: FastifyRequest, reply: FastifyReply) => {
+		try {
+			const {password, ...user} = await this.authRepository.getUser(request.user as { email: string })
+			reply.statusCode = 200
+			return reply.send(user)
+		} catch (error) {
+			return this.handleError(error, reply)
+		}
 	}
 }

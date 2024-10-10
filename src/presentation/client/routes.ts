@@ -2,13 +2,15 @@ import { FastifyInstance } from 'fastify'
 import { ClientController } from './client.controller'
 import { ClientDatasourceImpl, ClientRepositoryImpl } from '../../infrastructure'
 import { clientCreateSchema, clientGetDebtsSchema, clientRecordDebtSchema, clientReduceAccountSchema } from './client.docs'
+import { DivisaService } from '../../infrastructure/services/divisa.service'
 
 export class ClientRoutes {
 	static get routes() {
 		return async (fastify: FastifyInstance) => {
 			const dataSource = new ClientDatasourceImpl()
 			const repository = new ClientRepositoryImpl(dataSource)
-			const controller = new ClientController(repository)
+			const dollar = new DivisaService()
+			const controller = new ClientController(repository, dollar)
 
 			fastify.post(
 				'/create',{
@@ -41,6 +43,16 @@ export class ClientRoutes {
 				preHandler: fastify.authenticate, schema: clientReduceAccountSchema
 			}, 
 				controller.reduceAccount
+			)
+			fastify.put('/reset-account/:id', {
+				preHandler: fastify.authenticate
+			},
+				controller.resetAccount
+			)
+			fastify.post('/set-dollar-price', {
+				preHandler: fastify.authenticate
+			},
+				controller.setDollarPrice
 			)
 		}
 	}

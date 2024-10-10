@@ -1,4 +1,4 @@
-import { IDebt } from '..'
+import { IDebt, IDiscount } from '..'
 
 export class ClientUserEntity {
 	constructor(
@@ -8,5 +8,6 @@ export class ClientUserEntity {
 		public total: number = 0,
 		public totalDolar: string = '0.00$',
 		public debt: IDebt[] = [],
+		public discounts: IDiscount[] = [],
 	) {}
 }

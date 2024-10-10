@@ -17,6 +17,7 @@ export class AuthRoutes {
 			fastify.get('/logout', { schema: logoutUserSchema } , controller.logout)
 			fastify.get('/refresh-token', { schema:  refreshTokenSchema }, controller.refreshToken)
 			fastify.get('/verify-token', controller.verifyToken)
+			fastify.get('/user',{ preHandler: fastify.authenticate }, controller.getUser)
 		}
 	}
 }

@@ -6,6 +6,7 @@ import {
 	ClientUserEntity,
 	CustomError,
 	IDebt,
+	IDiscount,
 } from '../../domain'
 import { DivisaService } from '../services/divisa.service'
 
@@ -58,7 +59,8 @@ export class ClientDatasourceImpl implements ClientDatasource {
 				clientUpdated.createdAt as Date,
 				clientUpdated.total,
 				totalDolar,
-				clientUpdated.debt as IDebt[]
+				clientUpdated.debt as IDebt[],
+				clientUpdated.discounts as IDiscount[]
 			)
 		} catch (error) {
 			if (error instanceof CustomError) {
@@ -73,7 +75,7 @@ export class ClientDatasourceImpl implements ClientDatasource {
 			const client = await Client.findById(id)
 
 			if (!client) throw CustomError.NotFound('Client not found')
-				const totalDolar = this.divisaService.convertBsToDolar(client.total)
+				const totalDolar = await this.divisaService.convertBsToDolar(client.total)
 
 			return new ClientUserEntity(
 				client.id,
@@ -82,6 +84,7 @@ export class ClientDatasourceImpl implements ClientDatasource {
 				client.total,
 				totalDolar,
 				client.debt as IDebt[],
+				client.discounts as IDiscount[],
 			)
 		} catch (error) {
 			if (error instanceof CustomError) {
@@ -93,10 +96,9 @@ export class ClientDatasourceImpl implements ClientDatasource {
 
 	async getClients(): Promise<ClientUserEntity[]> {
 		const clients = await Client.find()
-		const dolarPrice = 37
 
-		return clients.map((client) => {
-			const totalDolar = this.divisaService.convertBsToDolar(client.total)
+		return await Promise.all(clients.map(async (client) => {
+			const totalDolar = await this.divisaService.convertBsToDolar(client.total)
 			return new ClientUserEntity(
 				client.id,
 				client.name,
@@ -104,8 +106,9 @@ export class ClientDatasourceImpl implements ClientDatasource {
 				client.total,
 				totalDolar,
 				client.debt as IDebt[],
+				client.discounts as IDiscount[],
 			)
-		})
+		}))
 	}
 
 	async deleteClient(id: string): Promise<string> {
@@ -131,8 +134,9 @@ export class ClientDatasourceImpl implements ClientDatasource {
 		if (amount > user.total) throw CustomError.BadRequest('Amount is greater than total')
 		
 		user.total = user.total - amount
+		user.discounts.push({ amount, createdAt: new Date() })
 		await user.save()
-		const totalDolar = this.divisaService.convertBsToDolar(user.total)
+		const totalDolar = await this.divisaService.convertBsToDolar(user.total)
 
 		return new ClientUserEntity(
 			user.id,
@@ -141,6 +145,28 @@ export class ClientDatasourceImpl implements ClientDatasource {
 			user.total,
 			totalDolar,
 			user.debt as IDebt[],
+			user.discounts as IDiscount[]
+		)
+	}
+
+	async resetAccount(id: string): Promise<ClientUserEntity> {
+		const user = await Client.findById(id)
+		if (!user) throw CustomError.NotFound('Client not found')
+		
+		await Client.updateOne(
+			{ _id: user.id },
+			{ $set: 
+				{ 
+					total: 0, 
+					debt: [] , 
+					discounts: []
+				}
+			})
+
+		return new ClientUserEntity(
+			user.id,
+			user.name,
+			user.createdAt as Date,
 		)
 	}
 }

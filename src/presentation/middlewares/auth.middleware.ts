@@ -16,7 +16,9 @@ export class AuthMiddleware {
 				return reply.send({ error: 'Unauthorized' })
 			}
 			//aqui esta el email del user
-			const verifyToken = request.jwt.verify(token)
+			const verifyToken = request.jwt.verify<{email: string}>(token)
+
+			request.user = verifyToken
 
 		} catch (error) {
 			if(isJwtError(error)){

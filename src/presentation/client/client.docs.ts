@@ -64,7 +64,16 @@ export const clientRecordDebtSchema: FastifySchema = {
               amount: { type: 'number' },
               description: { type: 'string' },
               createdAt: { type: 'string' },
-              '_id': { type: 'string' },
+            }
+          }
+        },
+      discounts: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              amount: { type: 'number' },
+              createdAt: { type: 'string' },
             }
           }
         }
@@ -100,6 +109,16 @@ export const clientGetDebtsSchema: FastifySchema = {
             properties: {
               amount: { type: 'number' },
               description: { type: 'string' },
+              createdAt: { type: 'string' },
+            }
+          }
+        },
+        discounts: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              amount: { type: 'number' },
               createdAt: { type: 'string' },
             }
           }
@@ -143,6 +162,16 @@ export const clientReduceAccountSchema: FastifySchema = {
             properties: {
               amount: { type: 'number' },
               description: { type: 'string' },
+              createdAt: { type: 'string' },
+            }
+          }
+        },
+        discounts: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              amount: { type: 'number' },
               createdAt: { type: 'string' },
             }
           }

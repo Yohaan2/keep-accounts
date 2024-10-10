@@ -3,3 +3,8 @@ export interface IDebt {
 	description?: string
 	createdAt?: Date
 }
+
+export interface IDiscount {
+	amount?: number
+	createdAt?: Date
+}

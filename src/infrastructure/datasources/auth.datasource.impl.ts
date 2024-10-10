@@ -81,4 +81,18 @@ export class AuthDatasourceImpl implements AuthDatasource {
 			throw CustomError.InternalServer()
 		}
 	}
+
+	async getUser(data: { email: string }): Promise<UserEntity> {
+		try {
+			const user = await User.findOne({ email: data.email })
+			if (!user) throw CustomError.NotFound('User not found')
+
+			return UserMapper.userEntityFromObject(user)
+		} catch (error) {
+			if (error instanceof CustomError) {
+				throw error
+			}
+			throw CustomError.InternalServer()
+		}
+	}
 }

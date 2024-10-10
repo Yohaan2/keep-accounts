@@ -33,4 +33,8 @@ export class ClientRepositoryImpl implements ClientRepository {
 	reduceAccount(id: string, amount: number): Promise<ClientUserEntity> {
 		return this.clientDatasource.reduceAccount(id, amount)
 	}
+
+	resetAccount(id: string): Promise<ClientUserEntity> {
+		return this.clientDatasource.resetAccount(id)
+	}
 }

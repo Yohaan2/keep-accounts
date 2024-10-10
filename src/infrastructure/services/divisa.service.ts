@@ -1,20 +1,36 @@
+import { Dolar } from "../../data/mongodb"
+
 export interface IDivisaService {
+  setDollarPrice(amount: number): Promise<number>
   getDollarPrice(): Promise<number>
-  convertBsToDolar(amount: number): string
+  convertBsToDolar(amount: number): Promise<string>
 }
 
 export class DivisaService implements IDivisaService {
   constructor() {}
+  async setDollarPrice(amount: number): Promise<number> {
+    const findDollar = await Dolar.findOne()
+
+    if (!findDollar) {
+      const newDollar = await Dolar.create({ value: amount })
+      return newDollar.value as number
+    }
+
+    await Dolar.updateOne({ value: amount })
+    return amount
+  }
 
   async getDollarPrice(): Promise<number> {
 
-    const dolar = await fetch('https://pydolarvenezuela-api.vercel.app/api/v1/dollar/unit/bcv')
-    const data = await dolar.json()
-    console.log(data.price)
-    return data.price
+    const dolar = await Dolar.findOne()
+    if (!dolar) return 0
+    return dolar.value as number
   }
 
-  convertBsToDolar(amount: number): string{
-    return (amount / 37).toFixed(2) + '$'
+  async convertBsToDolar(amount: number): Promise<string> {
+    const dollar = await Dolar.findOne()
+    if (!dollar) return 'Dollar not found'
+
+    return (amount / dollar?.value as number).toFixed(2) + '$'
   }
 }
