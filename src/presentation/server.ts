@@ -32,7 +32,7 @@ export class Server {
 
 	async start() {
 		this.app.register(cors, {
-			origin: ['https://app-8b30157b-013b-4168-b4e6-b33960b47e10.cleverapps.io', 'http://localhost:3000'],
+			origin: ['https://keep-account-client.vercel.app', 'http://localhost:3000'],
 			credentials: true,
 		})
 
