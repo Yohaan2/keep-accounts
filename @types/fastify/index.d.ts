@@ -4,7 +4,7 @@ import { UserEntity } from "../../src/domain";
 
 declare module 'fastify' {
   export interface FastifyRequest {
-    jwt: JWT
+    jwt: JWT,
   }
   export interface FastifyInstance  {
     authenticate: any

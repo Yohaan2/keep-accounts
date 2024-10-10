@@ -1,3 +1,4 @@
 export * from './mongo-database'
 export * from './models/user.model'
 export * from './models/client.model'
+export * from './models/dolar.model'

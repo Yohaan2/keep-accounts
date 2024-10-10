@@ -1,0 +1,12 @@
+{
+  "apps": [
+    {
+      "app_id": "app_8b30157b-013b-4168-b4e6-b33960b47e10",
+      "org_id": "user_0bd88f39-612c-4d73-870f-cd068dc1df0b",
+      "deploy_url": "https://push-n3-par-clevercloud-customers.services.clever-cloud.com/app_8b30157b-013b-4168-b4e6-b33960b47e10.git",
+      "git_ssh_url": "git+ssh://git@push-n3-par-clevercloud-customers.services.clever-cloud.com/app_8b30157b-013b-4168-b4e6-b33960b47e10.git",
+      "name": "keep-account-api",
+      "alias": "keep-account-api"
+    }
+  ]
+}

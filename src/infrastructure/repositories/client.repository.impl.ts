@@ -18,7 +18,23 @@ export class ClientRepositoryImpl implements ClientRepository {
 		return this.clientDatasource.recordDebt(clientAmountDto, id)
 	}
 
-	getDebts(id: string): Promise<ClientUserEntity> {
-		return this.clientDatasource.getDebts(id)
+	getDebtsById(id: string): Promise<ClientUserEntity> {
+		return this.clientDatasource.getDebtsById(id)
+	}
+
+	getClients(): Promise<ClientUserEntity[]> {
+		return this.clientDatasource.getClients()
+	}
+
+	deleteClient(id: string): Promise<string> {
+		return this.clientDatasource.deleteClient(id)
+	}
+
+	reduceAccount(id: string, amount: number): Promise<ClientUserEntity> {
+		return this.clientDatasource.reduceAccount(id, amount)
+	}
+
+	resetAccount(id: string): Promise<ClientUserEntity> {
+		return this.clientDatasource.resetAccount(id)
 	}
 }

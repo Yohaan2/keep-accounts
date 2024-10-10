@@ -15,7 +15,9 @@ export class AuthRoutes {
 			fastify.post('/login', { schema: loginUserSchema }, controller.login)
 			fastify.post('/register',{ schema: registerUserSchema}, controller.register)
 			fastify.get('/logout', { schema: logoutUserSchema } , controller.logout)
-			fastify.post('/refresh-token', { schema:  refreshTokenSchema }, controller.refreshToken)
+			fastify.get('/refresh-token', { schema:  refreshTokenSchema }, controller.refreshToken)
+			fastify.get('/verify-token', controller.verifyToken)
+			fastify.get('/user',{ preHandler: fastify.authenticate }, controller.getUser)
 		}
 	}
 }

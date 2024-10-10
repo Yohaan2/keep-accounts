@@ -1,4 +1,4 @@
-import { TOKEN_ERROR_CODES } from "../../config";
+import { TOKEN_ERROR_CODES } from "../../config/index";
 import { CustomError } from "./custom.error";
 
 export function isJwtError(error: any): error is { code: string, message: string } {
