@@ -52,10 +52,10 @@ export class Server {
 			secret: 'secretToken',
 			hook: 'onRequest',
 			parseOptions: {
-				httpOnly: false,
+				httpOnly: true,
 				secure: true,
 				path: '/',
-				sameSite: 'none'
+				sameSite: 'none',
 			}
 		})
 
