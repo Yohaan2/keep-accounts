@@ -34,6 +34,9 @@ export class Server {
 		this.app.register(cors, {
 			origin: ['https://keep-account-client.vercel.app', 'http://localhost:3000'],
 			credentials: true,
+			allowedHeaders: ['Content-Type', 'Authorization', 'Content-Length', 'X-Requested-With'],
+			methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+
 		})
 
 		this.app.register(fjwt, {
@@ -47,12 +50,13 @@ export class Server {
 		
 		this.app.register(fastifyCookie, {
 			secret: 'secretToken',
+			hook: 'onRequest',
 			parseOptions: {
-				httpOnly: true,
-				secure: false,
+				httpOnly: false,
+				secure: true,
 				path: '/',
 				sameSite: 'none',
-				
+				domain: 'app-8b30157b-013b-4168-b4e6-b33960b47e10.cleverapps.io'
 			}
 		})
 
