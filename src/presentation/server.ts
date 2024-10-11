@@ -49,9 +49,10 @@ export class Server {
 			secret: 'secretToken',
 			parseOptions: {
 				httpOnly: true,
-				secure: true,
+				secure: false,
 				path: '/',
-				sameSite: 'none'
+				sameSite: 'none',
+				
 			}
 		})
 
