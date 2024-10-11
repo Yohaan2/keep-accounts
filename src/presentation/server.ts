@@ -55,8 +55,7 @@ export class Server {
 				httpOnly: false,
 				secure: true,
 				path: '/',
-				sameSite: 'none',
-				domain: 'app-8b30157b-013b-4168-b4e6-b33960b47e10.cleverapps.io'
+				sameSite: 'none'
 			}
 		})
 
