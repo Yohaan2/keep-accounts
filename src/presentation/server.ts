@@ -51,7 +51,7 @@ export class Server {
 				httpOnly: true,
 				secure: true,
 				path: '/',
-				sameSite: 'none'
+				sameSite: 'lax'
 			}
 		})
 
