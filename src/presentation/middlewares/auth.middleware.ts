@@ -9,7 +9,7 @@ export class AuthMiddleware {
 	) {
 
 		try {
-			const token = request.cookies.access_token
+			const token = request.headers.authorization?.split(' ')[1]
 
 			if (!token) {
 				reply.statusCode = 401

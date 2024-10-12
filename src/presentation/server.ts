@@ -51,12 +51,6 @@ export class Server {
 		this.app.register(fastifyCookie, {
 			secret: 'secretToken',
 			hook: 'onRequest',
-			parseOptions: {
-				httpOnly: true,
-				secure: true,
-				path: '/',
-				sameSite: 'none',
-			}
 		})
 
 		this.app.decorate('authenticate', AuthMiddleware.validateJwt)
