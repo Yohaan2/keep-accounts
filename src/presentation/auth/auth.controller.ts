@@ -43,12 +43,16 @@ export class AuthController {
 		try {
 			const user = await new RegisterUser(this.authRepository, this.jwt).execute(registerUserDto!)
 
-			reply
-				.setCookie('refresh_token', user.refreshToken, { maxAge: 1000 * 60 * 60 * 24 * 365 })
-				.setCookie('access_token', user.token, { maxAge: 1000 * 60 * 60 * 24 * 2 })
+			// reply
+			// 	.setCookie('refresh_token', user.refreshToken, { maxAge: 1000 * 60 * 60 * 24 * 365 })
+			// 	.setCookie('access_token', user.token, { maxAge: 1000 * 60 * 60 * 24 * 2 })
 
 			reply.statusCode = 201
-			return reply.send({ access_token:  user.token, user: user.user })
+			return reply.send({ 
+				access_token: user.token, 
+				refresh_token: user.refreshToken,
+				user: user.user 
+			})
 		} catch (error) {
 			return this.handleError(error, reply)
 		}
@@ -67,12 +71,16 @@ export class AuthController {
 		try {
 			const user = await new LoginUser(this.authRepository, this.jwt).execute(loginUserDto!)
 
-			reply
-			.setCookie('refresh_token', user.refreshToken, { maxAge: 1000 * 60 * 60 * 24 * 10 })
-			.setCookie('access_token', user.token, { maxAge: 1000 * 60 * 60 * 24 * 2 })
+			// reply
+			// .setCookie('refresh_token', user.refreshToken, { maxAge: 1000 * 60 * 60 * 24 * 10 })
+			// .setCookie('access_token', user.token, { maxAge: 1000 * 60 * 60 * 24 * 2 })
 
 			reply.statusCode = 201
-			return reply.send({ access_token:  user.token, user: user.user })
+			return reply.send({ 
+				access_token:  user.token, 
+				refresh_token: user.refreshToken,
+				user: user.user 
+			})
 		} catch (error) {
 			return this.handleError(error, reply)
 		}
