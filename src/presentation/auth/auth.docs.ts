@@ -92,6 +92,9 @@ export const refreshTokenSchema: FastifySchema = {
         access_token: {
           type: 'string',
         },
+        refresh_token: {
+          type: 'string'
+        }
       },
     },
   },

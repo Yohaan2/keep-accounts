@@ -102,13 +102,9 @@ export class AuthController {
 		
 		try {
 			const {accessToken, refreshToken} = await this.authRepository.refreshToken(refreshTokenDto!)
-	
-			reply
-			.setCookie('access_token', accessToken, { maxAge: 1000 * 60 * 60 * 24 * 2 })
-			.setCookie('refresh_token', refreshToken, { maxAge: 1000 * 60 * 60 * 24 * 10 })
 			
 			reply.statusCode = 200
-			return reply.send({ access_token: accessToken })
+			return reply.send({ access_token: accessToken, refresh_token: refreshToken })
 		} catch (error) {
 			return this.handleError(error, reply)
 		}
