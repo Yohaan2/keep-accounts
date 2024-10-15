@@ -20,6 +20,7 @@ export const registerUserSchema: FastifySchema = {
       type: 'object',
       properties: {
         access_token: { type: 'string' },
+        refresh_token: { type: 'string' },
         user: {
           type: 'object',
           properties: {
@@ -51,6 +52,7 @@ export const loginUserSchema: FastifySchema = {
       type: 'object',
       properties: {
         access_token: { type: 'string' },
+        refresh_token: { type: 'string' },
         user: {
           type: 'object',
           properties: {
@@ -90,6 +92,9 @@ export const refreshTokenSchema: FastifySchema = {
         access_token: {
           type: 'string',
         },
+        refresh_token: {
+          type: 'string'
+        }
       },
     },
   },

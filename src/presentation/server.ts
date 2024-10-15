@@ -6,6 +6,7 @@ import fastifySwagger from '@fastify/swagger'
 import fastifySwaggerUi from '@fastify/swagger-ui'
 import { AuthMiddleware } from './middlewares/auth.middleware'
 import { swaggerConfig, swaggerUiConfig } from '../config/swagger'
+import cors from '@fastify/cors'
 
 interface Options {
 	port?: number
@@ -30,18 +31,28 @@ export class Server {
 	}
 
 	async start() {
+		this.app.register(cors, {
+			origin: ['https://keep-account-client.vercel.app', 'http://localhost:3000'],
+			credentials: true,
+			allowedHeaders: ['Content-Type', 'Authorization', 'Content-Length', 'X-Requested-With'],
+			methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+
+		})
+
 		this.app.register(fjwt, {
 			secret: this.jwtSeed
 		})
+
 		this.app.addHook('preHandler', (request: FastifyRequest, reply, done) => {
 			request.jwt = this.app.jwt
 			return done()
 		})
 		
 		this.app.register(fastifyCookie, {
-			secret: 'secret',
-			hook: 'preHandler'
+			secret: 'secretToken',
+			hook: 'onRequest',
 		})
+
 		this.app.decorate('authenticate', AuthMiddleware.validateJwt)
 		this.app.register(fastifyFormbody) // x-www-form-urlencoded
 		this.app.register(fastifySwagger, swaggerConfig)

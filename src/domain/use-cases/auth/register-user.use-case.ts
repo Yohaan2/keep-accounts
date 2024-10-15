@@ -1,4 +1,4 @@
-import { JwtAdapter } from '../../../config'
+import { JwtAdapter } from '../../../config/index'
 import { RegisterUserDto } from '../../index'
 import { CustomError } from '../../errors/custom.error'
 import { AuthRepository } from '../../repositories/auth.repository'
@@ -28,7 +28,7 @@ export class RegisterUser implements RegisterUserUseCase {
 				id: user.id,
 				name: user.name,
 				email: user.email,
-				role: user.roles,
+				roles: user.roles,
 			},
 		}
 	}

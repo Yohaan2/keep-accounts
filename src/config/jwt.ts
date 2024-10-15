@@ -18,7 +18,7 @@ export class JwtAdapter implements JwtAdapterInterface {
 	async generateToken(
 		payload: { email: string },
 	): Promise<string> {
-		return this.jwt.jwt.sign(payload, { expiresIn: '2h'})
+		return this.jwt.jwt.sign(payload, { expiresIn: '2d'})
 	}
 
 	async generateRefreshtoken(payload: { email: string }): Promise<string> {

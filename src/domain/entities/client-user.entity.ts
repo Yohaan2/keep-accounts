@@ -1,12 +1,13 @@
-import { IDebt } from '..'
+import { IDebt, IDiscount } from '..'
 
 export class ClientUserEntity {
 	constructor(
 		public id: string,
 		public name: string,
 		public createdAt: Date,
-		public total: number,
-		public totalDolar?: string,
-		public debt?: IDebt[],
+		public total: number = 0,
+		public totalDolar: string = '0.00$',
+		public debt: IDebt[] = [],
+		public discounts: IDiscount[] = [],
 	) {}
 }
